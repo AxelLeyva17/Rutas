@@ -84,6 +84,3 @@ Este código fue co-creado, iterado y optimizado con la asistencia de **Gemini C
 **Objetivo:** Flujo completo y mejoras de interfaz (Sidebar colapsable).
 > **Prompt utilizado:**
 > "Unificar todo: ocupo juntar mi actividad 1, 2, 3, 4. Que mi landing page pueda redirigirme al mapa y ahí mismo pueda guardar los puntos. Agregar una funcionalidad para poder minimizar los puntos guardados (sidebar colapsable) para que se aprecie mejor el mapa. El flujo debe ser: Entrar a Landing -> Click en Mapa -> Guardar punto -> Ocultar lista."
-
----
-*Proyecto desarrollado para la materia de Desarrollo Web Profesional.*
