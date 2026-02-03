@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RutasTj - Explora con Seguridad</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .map-gradient {
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.9)), 
+                        url('https://images.unsplash.com/photo-1569336415962-a4bd9f69c07b?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 flex flex-col min-h-screen">
+
+    <header class="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="map" class="text-amber-500 w-8 h-8"></i>
+                <span class="text-2xl font-bold tracking-tighter italic">RUTAS<span class="text-amber-500">TJ</span></span>
+            </div>
+            
+            <ul class="hidden md:flex space-x-8 text-sm font-medium uppercase tracking-widest">
+                <li><a href="#" class="hover:text-amber-500 transition-colors">Inicio</a></li>
+                <li><a href="#seguridad" class="hover:text-amber-500 transition-colors">Seguridad</a></li>
+                <li><a href="#contacto" class="hover:text-amber-500 transition-colors">Contacto</a></li>
+            </ul>
+
+            <button class="md:hidden text-slate-100">
+                <i data-lucide="menu"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main class="flex-grow">
+        <section class="map-gradient h-screen flex items-center justify-center relative">
+            <div class="text-center px-6 max-w-4xl mt-16">
+                <div class="inline-block p-4 rounded-full bg-amber-500/10 mb-6 border border-amber-500/20">
+                    <i data-lucide="map-pin" class="text-amber-500 w-10 h-10 animate-pulse"></i>
+                </div>
+                
+                <h1 class="text-5xl md:text-7xl font-black mb-6 leading-tight uppercase">
+                    La ciudad es tuya, <br>
+                    <span class="text-amber-500">conoce el camino.</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto">
+                    Navega por Tijuana con rutas optimizadas por expertos. Aventura para el fin de semana, seguridad para el diario.
+                </p>
+
+                <a href="/mapa" class="inline-flex items-center px-10 py-5 bg-amber-500 hover:bg-amber-400 text-slate-900 font-black rounded-full text-xl transition-all transform hover:scale-105 shadow-[0_0_30px_rgba(245,158,11,0.3)]">
+                    EXPLORAR MAPA
+                    <i data-lucide="navigation" class="ml-3 w-6 h-6"></i>
+                </a>
+            </div>
+
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce opacity-50">
+                <i data-lucide="chevron-down"></i>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contacto" class="bg-slate-950 border-t border-slate-800 pt-12 pb-6">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i data-lucide="map" class="text-amber-500 w-6 h-6"></i>
+                        <span class="text-xl font-bold tracking-tighter italic">RUTAS<span class="text-amber-500">TJ</span></span>
+                    </div>
+                    <p class="text-slate-500 text-sm">
+                        Tu compañero de viaje confiable en la frontera. Innovación y seguridad en cada kilómetro.
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-[0.2em]">Recursos</h4>
+                    <ul class="text-slate-400 text-sm space-y-2">
+                        <li><a href="#" class="hover:text-amber-500">Privacidad</a></li>
+                        <li><a href="#" class="hover:text-amber-500">Términos de uso</a></li>
+                        <li><a href="#" class="hover:text-amber-500">Reportar incidente</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-[0.2em]">Conéctate</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="p-2 bg-slate-800 rounded-lg hover:bg-amber-500 hover:text-slate-900 transition-all">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="p-2 bg-slate-800 rounded-lg hover:bg-amber-500 hover:text-slate-900 transition-all">
+                            <i data-lucide="twitter" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="p-2 bg-slate-800 rounded-lg hover:bg-amber-500 hover:text-slate-900 transition-all">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-900 pt-8 text-center text-slate-600 text-xs uppercase tracking-widest">
+                <p>&copy; 2026 RutasTj. Hecho en Tijuana para el mundo.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Inicializar iconos de Lucide
+        lucide.createIcons();
+    </script>
+</body>
+</html>

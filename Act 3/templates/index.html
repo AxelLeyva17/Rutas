@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Interactivo | RutasTj</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Ajuste de altura para dejar espacio al Header */
+        #map { 
+            height: calc(100vh - 73px); 
+            width: 100%;
+            background: #f8fafc; /* Color de carga suave */
+        }
+        
+        /* Ley de Fitts: Botones de Zoom más grandes y accesibles */
+        .leaflet-touch .leaflet-control-zoom-in, 
+        .leaflet-touch .leaflet-control-zoom-out {
+            background-color: #f59e0b !important; /* Ámbar */
+            color: #0f172a !important; /* Slate 900 */
+            border: none !important;
+            width: 52px !important; /* Tamaño aumentado para pulgares */
+            height: 52px !important;
+            line-height: 52px !important;
+            font-size: 22px !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15) !important;
+            margin-bottom: 8px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .leaflet-control-zoom { border: none !important; }
+
+        /* Estilo del Popup personalizado */
+        .leaflet-popup-content-wrapper {
+            border-radius: 12px;
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        /* Quitar el padding extra de Leaflet para que nuestro diseño Tailwind luzca bien */
+.leaflet-popup-content {
+    margin: 0 !important;
+    width: auto !important;
+}
+.leaflet-popup-content-wrapper {
+    padding: 0 !important;
+    overflow: hidden;
+}
+    </style>
+</head>
+<body class="overflow-hidden bg-white">
+
+    <header class="w-full z-[1001] bg-slate-900 border-b border-slate-800 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <a href="/" class="bg-amber-500 p-2 rounded-lg hover:bg-amber-400 transition transform hover:scale-105">
+                    <i class="fas fa-arrow-left text-slate-900"></i>
+                </a>
+                <span class="text-2xl font-bold tracking-tighter italic text-white">RUTAS<span class="text-amber-500">TJ</span></span>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <span class="hidden md:inline text-slate-400 text-xs font-bold uppercase tracking-widest">Tijuana, BC</span>
+                <button class="bg-slate-800 text-amber-500 p-2.5 rounded-xl border border-slate-700 hover:bg-slate-700 transition">
+                    <i class="fas fa-layer-group"></i>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="relative">
+        <div id="map"></div>
+
+        <div class="absolute top-6 left-1/2 -translate-x-1/2 z-[1000] pointer-events-none">
+            <div class="bg-slate-900/90 backdrop-blur-sm text-white px-5 py-2 rounded-full border border-amber-500/30 shadow-xl flex items-center space-x-3">
+                <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                <span class="text-xs font-bold uppercase tracking-widest">Navegación Segura Activa</span>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Coordenadas UTT El Refugio, Tijuana
+        const uttCoords = [32.4575, -116.8256];
+
+        // Inicializar mapa (zoomControl en false para moverlo según Ley de Fitts)
+        const map = L.map('map', {
+            zoomControl: false 
+        }).setView(uttCoords, 15);
+
+        // Capa de Mapa BLANCO (CartoDB Positron - Muy limpio para UX)
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Ley de Fitts: Controles en esquina inferior derecha para fácil acceso con el pulgar
+        L.control.zoom({
+            position: 'bottomright'
+        }).addTo(map);
+
+        // Icono personalizado Ámbar/Negro
+        const customIcon = L.divIcon({
+            html: `
+                <div class="relative flex items-center justify-center">
+                    <i class="fas fa-location-pin text-amber-500 text-5xl drop-shadow-lg"></i>
+                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-slate-900 rounded-full border-2 border-white"></div>
+                </div>`,
+            className: 'custom-div-icon',
+            iconSize: [40, 40],
+            iconAnchor: [20, 40]
+        });
+
+        // Marcador en la UTT
+        L.marker(uttCoords, {icon: customIcon}).addTo(map)
+            .bindPopup(`
+                <div class="p-1">
+                    <h3 class="text-slate-900 font-black uppercase text-sm">UTT El Refugio</h3>
+                    <p class="text-slate-500 text-xs mt-1">Tu punto de aventura seguro hoy.</p>
+                </div>
+            `);
+
+         // Variable para rastrear el marcador temporal
+let marcadorTemporal = null;
+
+map.on('click', function(e) {
+    const lat = e.latlng.lat;
+    const lng = e.latlng.lng;
+
+    if (marcadorTemporal) { marcadorTemporal.remove(); }
+
+    marcadorTemporal = L.marker([lat, lng], {icon: customIcon}).addTo(map);
+
+    // DISEÑO MEJORADO: Más ancho (min-width 240px) y botones más altos
+    const popupContent = `
+        <div class="p-4 w-[240px] md:w-[280px]">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="bg-amber-100 p-3 rounded-xl">
+                    <i class="fas fa-map-pin text-amber-600 text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] text-slate-400 uppercase font-black tracking-widest">Confirmación</p>
+                    <p class="text-slate-900 font-bold text-base">¿Guardar punto?</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col gap-2">
+                <button id="btn-si" class="w-full py-3 bg-slate-900 text-amber-500 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-slate-800 shadow-lg transition-all border border-slate-700">
+                    SÍ, GUARDAR EN RUTA
+                </button>
+                <button id="btn-no" class="w-full py-3 bg-white text-slate-400 rounded-xl text-xs font-bold hover:text-red-500 transition-all border border-slate-200">
+                    CANCELAR
+                </button>
+            </div>
+        </div>
+    `;
+
+    marcadorTemporal.bindPopup(popupContent, {
+        closeButton: false,
+        offset: [0, -35],
+        className: 'custom-popup' // Clase para CSS
+    }).openPopup();
+
+    setTimeout(() => {
+        const btnSi = document.getElementById('btn-si');
+        const btnNo = document.getElementById('btn-no');
+
+        if(btnSi) btnSi.onclick = () => guardarPuntoEnServidor(lat, lng);
+        if(btnNo) {
+            btnNo.onclick = () => {
+                marcadorTemporal.closePopup();
+                map.removeLayer(marcadorTemporal);
+                marcadorTemporal = null;
+            };
+        }
+    }, 200);
+});
+
+function guardarPuntoEnServidor(lat, lng) {
+    const btnSi = document.getElementById('btn-si');
+    const originalText = btnSi.innerHTML;
+    
+    btnSi.innerHTML = '<i class="fas fa-circle-notch animate-spin mr-2"></i> PROCESANDO...';
+    btnSi.disabled = true;
+
+    // IMPORTANTE: Asegúrate de que el servidor Flask esté corriendo en el mismo host/puerto
+    fetch('/guardar_punto', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lat: lat, lng: lng })
+    })
+    .then(response => {
+        if (!response.ok) throw new Error('Error en servidor');
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            marcadorTemporal.getPopup().setContent(`
+                <div class="p-6 text-center">
+                    <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-3 shadow-inner">
+                        <i class="fas fa-check text-xl"></i>
+                    </div>
+                    <p class="text-slate-900 font-black uppercase text-sm tracking-tight">¡Punto Registrado!</p>
+                    <p class="text-slate-500 text-[11px] mt-1">Sincronizado correctamente con RutasTj.</p>
+                </div>
+            `);
+            marcadorTemporal = null; 
+        }
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        btnSi.innerHTML = originalText;
+        btnSi.disabled = false;
+        alert("⚠️ No se pudo conectar con el servidor.\n1. Verifica que main.py esté corriendo.\n2. Asegúrate de que la ruta sea http://127.0.0.1:5000");
+    });
+}
+
+    </script>
+</body>
+</html>
+
+
