@@ -12,8 +12,8 @@ Sigue estos pasos para ejecutar la aplicación en tu computadora local:
 
 1.  **Clonar el repositorio** (opcional si ya tienes el código):
     ```bash
-    git clone [https://github.com/TU_USUARIO/RutasTj-Proyecto.git](https://github.com/TU_USUARIO/RutasTj-Proyecto.git)
-    cd RutasTj-Proyecto
+    git clone [https://github.com/AxelLeyva17/Rutas.git)
+    cd Rutas
     ```
 
 2.  **Instalar dependencias:**
